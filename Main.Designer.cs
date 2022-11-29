@@ -32,15 +32,19 @@
             this.gbControl = new System.Windows.Forms.GroupBox();
             this.btnSaveFile = new System.Windows.Forms.Button();
             this.btnOpenFile = new System.Windows.Forms.Button();
-            this.dgvMain = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnRemoveDtc = new System.Windows.Forms.Button();
             this.tbRemoveDtc = new System.Windows.Forms.TextBox();
+            this.btnRemoveDtc = new System.Windows.Forms.Button();
+            this.gpbMain = new System.Windows.Forms.GroupBox();
+            this.dgvMain = new System.Windows.Forms.DataGridView();
+            this.gpbAvailableCodes = new System.Windows.Forms.GroupBox();
             this.dgvAvailableCodes = new System.Windows.Forms.DataGridView();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.gpbMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).BeginInit();
+            this.gpbAvailableCodes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAvailableCodes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,10 +53,10 @@
             this.tlpMain.ColumnCount = 2;
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMain.Controls.Add(this.dgvAvailableCodes, 1, 1);
             this.tlpMain.Controls.Add(this.gbControl, 0, 0);
-            this.tlpMain.Controls.Add(this.dgvMain, 0, 1);
             this.tlpMain.Controls.Add(this.groupBox1, 1, 0);
+            this.tlpMain.Controls.Add(this.gpbMain, 0, 1);
+            this.tlpMain.Controls.Add(this.gpbAvailableCodes, 1, 1);
             this.tlpMain.Location = new System.Drawing.Point(12, 12);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 2;
@@ -93,14 +97,6 @@
             this.btnOpenFile.UseVisualStyleBackColor = true;
             this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
             // 
-            // dgvMain
-            // 
-            this.dgvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMain.Location = new System.Drawing.Point(3, 59);
-            this.dgvMain.Name = "dgvMain";
-            this.dgvMain.Size = new System.Drawing.Size(382, 364);
-            this.dgvMain.TabIndex = 1;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tbRemoveDtc);
@@ -111,6 +107,13 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "P-Code";
+            // 
+            // tbRemoveDtc
+            // 
+            this.tbRemoveDtc.Location = new System.Drawing.Point(6, 23);
+            this.tbRemoveDtc.Name = "tbRemoveDtc";
+            this.tbRemoveDtc.Size = new System.Drawing.Size(100, 20);
+            this.tbRemoveDtc.TabIndex = 3;
             // 
             // btnRemoveDtc
             // 
@@ -123,20 +126,41 @@
             this.btnRemoveDtc.UseVisualStyleBackColor = true;
             this.btnRemoveDtc.Click += new System.EventHandler(this.btnRemoveDtc_Click);
             // 
-            // tbRemoveDtc
+            // gpbMain
             // 
-            this.tbRemoveDtc.Location = new System.Drawing.Point(6, 23);
-            this.tbRemoveDtc.Name = "tbRemoveDtc";
-            this.tbRemoveDtc.Size = new System.Drawing.Size(100, 20);
-            this.tbRemoveDtc.TabIndex = 3;
+            this.gpbMain.Controls.Add(this.dgvMain);
+            this.gpbMain.Location = new System.Drawing.Point(3, 59);
+            this.gpbMain.Name = "gpbMain";
+            this.gpbMain.Size = new System.Drawing.Size(382, 364);
+            this.gpbMain.TabIndex = 4;
+            this.gpbMain.TabStop = false;
+            this.gpbMain.Text = "Removed Codes";
+            // 
+            // dgvMain
+            // 
+            this.dgvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvMain.Location = new System.Drawing.Point(6, 19);
+            this.dgvMain.Name = "dgvMain";
+            this.dgvMain.Size = new System.Drawing.Size(370, 339);
+            this.dgvMain.TabIndex = 2;
+            // 
+            // gpbAvailableCodes
+            // 
+            this.gpbAvailableCodes.Controls.Add(this.dgvAvailableCodes);
+            this.gpbAvailableCodes.Location = new System.Drawing.Point(391, 59);
+            this.gpbAvailableCodes.Name = "gpbAvailableCodes";
+            this.gpbAvailableCodes.Size = new System.Drawing.Size(382, 364);
+            this.gpbAvailableCodes.TabIndex = 5;
+            this.gpbAvailableCodes.TabStop = false;
+            this.gpbAvailableCodes.Text = "Available Codes in Software";
             // 
             // dgvAvailableCodes
             // 
             this.dgvAvailableCodes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAvailableCodes.Location = new System.Drawing.Point(391, 59);
+            this.dgvAvailableCodes.Location = new System.Drawing.Point(6, 19);
             this.dgvAvailableCodes.Name = "dgvAvailableCodes";
-            this.dgvAvailableCodes.Size = new System.Drawing.Size(382, 364);
-            this.dgvAvailableCodes.TabIndex = 3;
+            this.dgvAvailableCodes.Size = new System.Drawing.Size(370, 339);
+            this.dgvAvailableCodes.TabIndex = 4;
             // 
             // DtcRemover
             // 
@@ -148,9 +172,11 @@
             this.Text = "DTC Remover by Erick Bastiaannet";
             this.tlpMain.ResumeLayout(false);
             this.gbControl.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.gpbMain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
+            this.gpbAvailableCodes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAvailableCodes)).EndInit();
             this.ResumeLayout(false);
 
@@ -162,10 +188,12 @@
         private System.Windows.Forms.GroupBox gbControl;
         private System.Windows.Forms.Button btnSaveFile;
         private System.Windows.Forms.Button btnOpenFile;
-        private System.Windows.Forms.DataGridView dgvMain;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox tbRemoveDtc;
         private System.Windows.Forms.Button btnRemoveDtc;
+        private System.Windows.Forms.GroupBox gpbMain;
+        private System.Windows.Forms.DataGridView dgvMain;
+        private System.Windows.Forms.GroupBox gpbAvailableCodes;
         private System.Windows.Forms.DataGridView dgvAvailableCodes;
     }
 }
