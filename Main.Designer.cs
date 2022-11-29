@@ -33,9 +33,13 @@
             this.btnSaveFile = new System.Windows.Forms.Button();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.dgvMain = new System.Windows.Forms.DataGridView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnRemoveDtc = new System.Windows.Forms.Button();
+            this.tbRemoveDtc = new System.Windows.Forms.TextBox();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpMain
@@ -45,6 +49,7 @@
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.Controls.Add(this.gbControl, 0, 0);
             this.tlpMain.Controls.Add(this.dgvMain, 0, 1);
+            this.tlpMain.Controls.Add(this.groupBox1, 1, 0);
             this.tlpMain.Location = new System.Drawing.Point(12, 12);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 2;
@@ -72,6 +77,7 @@
             this.btnSaveFile.TabIndex = 1;
             this.btnSaveFile.Text = "Save File";
             this.btnSaveFile.UseVisualStyleBackColor = true;
+            this.btnSaveFile.Click += new System.EventHandler(this.btnSaveFile_Click);
             // 
             // btnOpenFile
             // 
@@ -91,6 +97,34 @@
             this.dgvMain.Size = new System.Drawing.Size(382, 364);
             this.dgvMain.TabIndex = 1;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tbRemoveDtc);
+            this.groupBox1.Controls.Add(this.btnRemoveDtc);
+            this.groupBox1.Location = new System.Drawing.Point(391, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(382, 50);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "P-Code";
+            // 
+            // btnRemoveDtc
+            // 
+            this.btnRemoveDtc.Location = new System.Drawing.Point(112, 21);
+            this.btnRemoveDtc.Name = "btnRemoveDtc";
+            this.btnRemoveDtc.Size = new System.Drawing.Size(81, 23);
+            this.btnRemoveDtc.TabIndex = 2;
+            this.btnRemoveDtc.Text = "Remove DTC";
+            this.btnRemoveDtc.UseVisualStyleBackColor = true;
+            this.btnRemoveDtc.Click += new System.EventHandler(this.btnRemoveDtc_Click);
+            // 
+            // tbRemoveDtc
+            // 
+            this.tbRemoveDtc.Location = new System.Drawing.Point(6, 23);
+            this.tbRemoveDtc.Name = "tbRemoveDtc";
+            this.tbRemoveDtc.Size = new System.Drawing.Size(100, 20);
+            this.tbRemoveDtc.TabIndex = 3;
+            // 
             // DtcRemover
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -102,6 +136,8 @@
             this.tlpMain.ResumeLayout(false);
             this.gbControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -113,6 +149,9 @@
         private System.Windows.Forms.Button btnSaveFile;
         private System.Windows.Forms.Button btnOpenFile;
         private System.Windows.Forms.DataGridView dgvMain;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox tbRemoveDtc;
+        private System.Windows.Forms.Button btnRemoveDtc;
     }
 }
 
