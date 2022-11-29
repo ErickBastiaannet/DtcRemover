@@ -80,7 +80,7 @@ namespace DtcRemover
 
             //Search for P-Code
             //Test P0087 Hex to Dec
-            string pCodeHex = "0401";
+            string pCodeHex = tbRemoveDtc.Text;
             var pcode1 = pCodeHex.Substring(0, 2);
             var pcode2 = pCodeHex.Substring(2, 2);
 
