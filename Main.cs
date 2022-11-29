@@ -12,8 +12,10 @@ using System.IO;
 using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-
 using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
+using System.Data.SqlTypes;
+using System.Collections;
 
 namespace DtcRemover
 {
@@ -28,16 +30,20 @@ namespace DtcRemover
         byte[] DFES_DTCO;
         byte[] DFES_Cls;
         byte[] DFC_DisblMsk2;
+        byte[] AvailableErrorCodes;
 
         List<int> potentialDFES_DTCO;
         List<int> potentialDFES_Cls;
-        List<int> potentialDFC_DisblMsk2;
+        List<int> potentialDFC_DisblMsk2;    
 
         int lengthErrorCodes8bit;
         int lengthErrorCodes16bit;
 
-        //Create datatable
+        //Create datatables 
+        //Removed P-Code table
         DataTable dtMain = new DataTable();
+        //List of available DTC's
+        DataTable dtAvailableCodes=new DataTable();
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             //Enable DTC Remove button
@@ -45,9 +51,11 @@ namespace DtcRemover
             //Disable Open File button
             btnOpenFile.Enabled = false;
 
-            //Add columns to datatable
+            //Add columns to datatable Main
             dtMain.Columns.Add("P-Code");
             dtMain.Columns.Add("Removed");
+            //Add columns to datatable available codes
+            dtAvailableCodes.Columns.Add("P-Code");
 
             //OpenFileDialog to select file to modify
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -69,13 +77,54 @@ namespace DtcRemover
                 DFES_Cls = new byte[] { 11, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 00, 00, 03, 11 };
                 //Start of DisableMask 16 bit
                 DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253 };
-                
+
                 //Find locations of DTC tables
-                potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);                
-                potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);                
+                potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
                 potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+
+                //Create DTC P-code table to show which DTC are available in the ECU
+                AvailableErrorCodes = bytes.Skip(potentialDFES_DTCO[0]).Take(lengthErrorCodes16bit).ToArray();
+
+                //Create hex string of Available Error Codes
+                string hexStringAvailableErrorCodes = ByteArrayToString(AvailableErrorCodes);
+                
+                //Take ever 4 characters of a string and put in an array
+                int countHexStringAvailableErrorCodes = hexStringAvailableErrorCodes.Length;
+                for (int i = 0; i < countHexStringAvailableErrorCodes; i += 4)
+                {
+                    string substring = hexStringAvailableErrorCodes.Substring(i, 4);
+                    //swap the first 2 characters with the last 2 (HiLo Change)
+                    string substringBytesSwapped = substring.Remove(0, 2) + substring.Substring(0, 2);
+                    //UpperCase for P-codes
+                    string substringBytesSwappedUpper = substringBytesSwapped.ToUpper();
+
+                    //Add P-codes to list
+                    if (substringBytesSwappedUpper != "")
+                    {
+                        //listAvailableErrorCodesInHex.Add(substringBytesSwappedUpper);
+
+                        //Add row to datatable available dtc's
+                        DataRow _pCodeString = dtAvailableCodes.NewRow();
+                        //Add row to column
+                        _pCodeString["P-Code"] = substringBytesSwappedUpper;
+                        dtAvailableCodes.Rows.Add(_pCodeString);
+                    }
+                    
+                }
+                //Show list with available errorcodes in datagridview
+                //dtAvailableCodes.Columns.Add("P-Code");
+                dgvAvailableCodes.DataSource = dtAvailableCodes;
             }
         }
+        //ByteArray to String
+        public static string ByteArrayToString(byte[] ba)
+            {
+                StringBuilder hex = new StringBuilder(ba.Length * 2);
+                foreach (byte b in ba)
+                    hex.AppendFormat("{0:x2}", b);
+                return hex.ToString();
+            }
 
         //SearchFunction for pattern search in byte array
         static public List<int> SearchBytePattern(byte[] pattern, byte[] bytes)
@@ -111,24 +160,6 @@ namespace DtcRemover
             string pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
             string pCodeBinary1 = Convert.ToInt32(pcode2, 16).ToString();
             string pCodeBinary2 = Convert.ToInt32(pcode1, 16).ToString();
-
-            //Add 0 or 00 to fill the int
-            //if (pCodeBinary1.Length < 2)
-            //{
-            //    pCodeBinary1 = "00" + pCodeBinary1;
-            //}
-            //if (pCodeBinary1.Length < 3)
-            //{
-            //    pCodeBinary1 = "0" + pCodeBinary1;
-            //}
-            //if (pCodeBinary2.Length < 2)
-            //{
-            //    pCodeBinary2 = "00" + pCodeBinary2;
-            //}
-            //if (pCodeBinary2.Length < 3)
-            //{
-            //    pCodeBinary2 = "0" + pCodeBinary2;
-            //}
 
             string decimal_numbers = pCodeBinary1 + "," + pCodeBinary2;
 
@@ -207,6 +238,8 @@ namespace DtcRemover
             var path = @"file.bin";
             File.WriteAllBytes(path, bytes);
             dtMain.Clear();
+            dtAvailableCodes.Clear();
+            dgvAvailableCodes.Refresh();
             dgvAvailableCodes.Refresh();
             tbRemoveDtc.Text = "";
             btnSaveFile.Enabled = false;

@@ -145,7 +145,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tlpMain);
             this.Name = "DtcRemover";
-            this.Text = "DTC Remover";
+            this.Text = "DTC Remover by Erick Bastiaannet";
             this.tlpMain.ResumeLayout(false);
             this.gbControl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
