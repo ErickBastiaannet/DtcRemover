@@ -36,8 +36,19 @@ namespace DtcRemover
         int lengthErrorCodes8bit;
         int lengthErrorCodes16bit;
 
+        //Create datatable
+        DataTable dtMain = new DataTable();
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
+            //Enable DTC Remove button
+            btnRemoveDtc.Enabled = true;
+            //Disable Open File button
+            btnOpenFile.Enabled = false;
+
+            //Add columns to datatable
+            dtMain.Columns.Add("P-Code");
+            dtMain.Columns.Add("Removed");
+
             //OpenFileDialog to select file to modify
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -170,14 +181,11 @@ namespace DtcRemover
                             }
                         }
                     }
-                MessageBox.Show("DTC removed succesfully.", "DTC Removed");               
+                MessageBox.Show("DTC removed succesfully.", "DTC Removed");
 
-                //Create datatable
-                DataTable dtMain = new DataTable();
-                //Don't clear the table to show all removed P-Codes
-                //dtMain.Clear();
-                dtMain.Columns.Add("P-Code");
-                dtMain.Columns.Add("Removed");
+                //Enable Save File button
+                btnSaveFile.Enabled = true;
+
                 DataRow _itemString = dtMain.NewRow();
                 //Add row to column
                 _itemString["P-Code"] = tbRemoveDtc.Text;
@@ -198,6 +206,13 @@ namespace DtcRemover
             //Write bytes to file.
             var path = @"file.bin";
             File.WriteAllBytes(path, bytes);
+            dtMain.Clear();
+            dgvAvailableCodes.Refresh();
+            tbRemoveDtc.Text = "";
+            btnSaveFile.Enabled = false;
+            btnRemoveDtc.Enabled = false;
+            btnOpenFile.Enabled = true;
+            MessageBox.Show("Modified file succesfully saved.", "File saved");
         }
     }
 }

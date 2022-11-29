@@ -36,10 +36,12 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnRemoveDtc = new System.Windows.Forms.Button();
             this.tbRemoveDtc = new System.Windows.Forms.TextBox();
+            this.dgvAvailableCodes = new System.Windows.Forms.DataGridView();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAvailableCodes)).BeginInit();
             this.SuspendLayout();
             // 
             // tlpMain
@@ -47,6 +49,7 @@
             this.tlpMain.ColumnCount = 2;
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.Controls.Add(this.dgvAvailableCodes, 1, 1);
             this.tlpMain.Controls.Add(this.gbControl, 0, 0);
             this.tlpMain.Controls.Add(this.dgvMain, 0, 1);
             this.tlpMain.Controls.Add(this.groupBox1, 1, 0);
@@ -71,6 +74,7 @@
             // 
             // btnSaveFile
             // 
+            this.btnSaveFile.Enabled = false;
             this.btnSaveFile.Location = new System.Drawing.Point(87, 19);
             this.btnSaveFile.Name = "btnSaveFile";
             this.btnSaveFile.Size = new System.Drawing.Size(75, 23);
@@ -110,6 +114,7 @@
             // 
             // btnRemoveDtc
             // 
+            this.btnRemoveDtc.Enabled = false;
             this.btnRemoveDtc.Location = new System.Drawing.Point(112, 21);
             this.btnRemoveDtc.Name = "btnRemoveDtc";
             this.btnRemoveDtc.Size = new System.Drawing.Size(81, 23);
@@ -125,6 +130,14 @@
             this.tbRemoveDtc.Size = new System.Drawing.Size(100, 20);
             this.tbRemoveDtc.TabIndex = 3;
             // 
+            // dgvAvailableCodes
+            // 
+            this.dgvAvailableCodes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAvailableCodes.Location = new System.Drawing.Point(391, 59);
+            this.dgvAvailableCodes.Name = "dgvAvailableCodes";
+            this.dgvAvailableCodes.Size = new System.Drawing.Size(382, 364);
+            this.dgvAvailableCodes.TabIndex = 3;
+            // 
             // DtcRemover
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -138,6 +151,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAvailableCodes)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -152,6 +166,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox tbRemoveDtc;
         private System.Windows.Forms.Button btnRemoveDtc;
+        private System.Windows.Forms.DataGridView dgvAvailableCodes;
     }
 }
 
