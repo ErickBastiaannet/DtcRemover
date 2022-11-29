@@ -23,7 +23,19 @@ namespace DtcRemover
         {
             InitializeComponent();
         }
+        //Create byte arrays and lists outside of functions
         byte[] bytes;
+        byte[] DFES_DTCO;
+        byte[] DFES_Cls;
+        byte[] DFC_DisblMsk2;
+
+        List<int> potentialDFES_DTCO;
+        List<int> potentialDFES_Cls;
+        List<int> potentialDFC_DisblMsk2;
+
+        int lengthErrorCodes8bit;
+        int lengthErrorCodes16bit;
+
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             //OpenFileDialog to select file to modify
@@ -32,7 +44,25 @@ namespace DtcRemover
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 //Create byte array of the file in binary format
-                bytes = File.ReadAllBytes(openFileDialog.FileName);                
+                bytes = File.ReadAllBytes(openFileDialog.FileName);
+
+                //As test 4G0907589F_0004 is used
+                //block length is 1552 8 bit, 3104 16 bit error codes.
+                lengthErrorCodes8bit = 1552;
+                lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+
+                //Pcode Block
+                //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                DFES_DTCO = new byte[] { 00, 00, 19, 209, 18, 209, 11, 21, 11, 21 };
+                //Start of Fehlerklasse 8 bit
+                DFES_Cls = new byte[] { 11, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 00, 00, 03, 11 };
+                //Start of DisableMask 16 bit
+                DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253 };
+                
+                //Find locations of DTC tables
+                potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);                
+                potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);                
+                potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
             }
         }
 
@@ -61,23 +91,6 @@ namespace DtcRemover
 
         private void btnRemoveDtc_Click(object sender, EventArgs e)
         {
-            //As test 4G0907589F_0004 is used
-            //block length is 1552 8 bit, 3104 16 bit error codes.
-            int lengthErrorCodes8bit = 1552;
-            int lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
-
-            //Pcode Block
-            //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
-            byte[] DFES_DTCO = new byte[] { 00, 00, 19, 209, 18, 209, 11, 21, 11, 21 };
-            //Start of Fehlerklasse 8 bit
-            byte[] DFES_Cls = new byte[] { 11, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 00, 00, 03, 11 };
-            //Start of DisableMask 16 bit
-            byte[] DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253 };
-
-            List<int> potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
-            List<int> potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
-            List<int> potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
-
             //Search for P-Code
             //Test P0087 Hex to Dec
             string pCodeHex = tbRemoveDtc.Text;
@@ -127,23 +140,7 @@ namespace DtcRemover
                     if (item % 2 == 0)
                     {
                         {
-                            //Create string of item
-                            string itemString = item.ToString();
-                            //Create datatable
-                            DataTable dtMain = new DataTable();
-                            dtMain.Clear();
-                            dtMain.Columns.Add("P-Code");
-                            dtMain.Columns.Add("Address");
-                            DataRow _itemString = dtMain.NewRow();
-
                             int addressDFES_DTCO = item + potentialDFES_DTCO[0];
-
-                            //Add row to column
-                            _itemString["P-Code"] = "Test";
-                            _itemString["Address"] = addressDFES_DTCO.ToString();
-                            dtMain.Rows.Add(itemString);
-
-                            dgvMain.DataSource = dtMain;
 
                             //txtBoxMain.Text = addressDFES_DTCO.ToString();
                             //16 bit
@@ -173,7 +170,21 @@ namespace DtcRemover
                             }
                         }
                     }
-                MessageBox.Show("DTC removed succesfully.", "DTC Removed");
+                MessageBox.Show("DTC removed succesfully.", "DTC Removed");               
+
+                //Create datatable
+                DataTable dtMain = new DataTable();
+                //Don't clear the table to show all removed P-Codes
+                //dtMain.Clear();
+                dtMain.Columns.Add("P-Code");
+                dtMain.Columns.Add("Removed");
+                DataRow _itemString = dtMain.NewRow();
+                //Add row to column
+                _itemString["P-Code"] = tbRemoveDtc.Text;
+                _itemString["Removed"] = "Yes";
+                dtMain.Rows.Add(_itemString);
+
+                dgvMain.DataSource = dtMain;
             }
             else
             {
