@@ -16,6 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
 using System.Data.SqlTypes;
 using System.Collections;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace DtcRemover
 {
@@ -65,7 +66,7 @@ namespace DtcRemover
                 //Create byte array of the file in binary format
                 bytes = File.ReadAllBytes(openFileDialog.FileName);
 
-                //As test 4G0907589F_0004 is used
+                //As base 4G0907589F_0004 is used
                 //block length is 1552 8 bit, 3104 16 bit error codes.
                 lengthErrorCodes8bit = 1552;
                 lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
@@ -82,6 +83,56 @@ namespace DtcRemover
                 potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
                 potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
                 potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                //Show Messagebox with detected ECU Type
+                if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                {
+                    MessageBox.Show("EDC17CP44 Algorithm Detected", "EDC17CP44");
+                }
+                //Redesign so also this warning can be given for the default ECU.
+                //{
+                //    MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
+                //    return;
+                //}
+
+                //Add 04E906027JT_4145
+                if (potentialDFES_DTCO.Count == 0 && potentialDFES_DTCO.Count == 0 && potentialDFC_DisblMsk2.Count == 0)
+                {
+                    //block length is 1552 8 bit, 3104 16 bit error codes.
+                    lengthErrorCodes8bit = 992;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 08, 208 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 1, 11, 2, 0 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 00, 255, 255, 253, 03, 255, };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                    {
+                        MessageBox.Show("MED17.5.25 Algorithm Detected", "MED17.5.25");
+                    }
+                    else
+                    {
+                        dtMain.Clear();
+                        dtAvailableCodes.Clear();
+                        dgvAvailableCodes.Refresh();
+                        dgvAvailableCodes.Refresh();
+                        tbRemoveDtc.Text = "";
+                        btnSaveFile.Enabled = false;
+                        btnRemoveDtc.Enabled = false;
+                        btnOpenFile.Enabled = true;
+                        MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
+                        return;
+                    }
+
+                }
 
                 //Create DTC P-code table to show which DTC are available in the ECU
                 AvailableErrorCodes = bytes.Skip(potentialDFES_DTCO[0]).Take(lengthErrorCodes16bit).ToArray();
