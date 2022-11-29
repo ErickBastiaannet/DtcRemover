@@ -1,0 +1,183 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.Win32;
+using System.IO;
+using System.Reflection.Emit;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows;
+
+using static System.Net.Mime.MediaTypeNames;
+
+namespace DtcRemover
+{
+    public partial class DtcRemover : Form
+    {
+        public DtcRemover()
+        {
+            InitializeComponent();
+        }
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog to select file to modify
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Create byte array of the file in binary format
+                byte[] bytes = File.ReadAllBytes(openFileDialog.FileName);
+
+                //As test 4G0907589F_0004 is used
+                //block length is 1552 8 bit, 3104 16 bit error codes.
+                int lengthErrorCodes8bit = 1552;
+                int lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+
+                //Pcode Block
+                //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                byte[] DFES_DTCO = new byte[] { 00, 00, 19, 209, 18, 209, 11, 21, 11, 21 };
+                //Start of Fehlerklasse 8 bit
+                byte[] DFES_Cls = new byte[] { 11, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 00, 00, 03, 11 };
+                //Start of DisableMask 16 bit
+                byte[] DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253 };
+
+                List<int> potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                List<int> potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                List<int> potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+
+                //Search for P-Code
+                //Test P0087 Hex to Dec
+                string pCodeHex = "0401";
+                var pcode1 = pCodeHex.Substring(0, 2);
+                var pcode2 = pCodeHex.Substring(2, 2);
+
+                string pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
+                string pCodeBinary1 = Convert.ToInt32(pcode2, 16).ToString();
+                string pCodeBinary2 = Convert.ToInt32(pcode1, 16).ToString();
+
+                //Add 0 or 00 to fill the int
+                //if (pCodeBinary1.Length < 2)
+                //{
+                //    pCodeBinary1 = "00" + pCodeBinary1;
+                //}
+                //if (pCodeBinary1.Length < 3)
+                //{
+                //    pCodeBinary1 = "0" + pCodeBinary1;
+                //}
+                //if (pCodeBinary2.Length < 2)
+                //{
+                //    pCodeBinary2 = "00" + pCodeBinary2;
+                //}
+                //if (pCodeBinary2.Length < 3)
+                //{
+                //    pCodeBinary2 = "0" + pCodeBinary2;
+                //}
+
+                string decimal_numbers = pCodeBinary1 + "," + pCodeBinary2;
+
+                string[] decimal_values = decimal_numbers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                byte[] pCodeArray = new byte[decimal_values.Length];
+                for (int i = 0; i < decimal_values.Length; i++)
+                {
+                    pCodeArray[i] = byte.Parse(decimal_values[i]);
+                }
+
+                //Extract the DTC Array's from the file to start counting the DTC position
+                if (potentialDFES_DTCO.Count != 0)
+                {
+                    //Search for all DTC's
+                    var DFES_DTCOCuttedEightBit = bytes.Skip(potentialDFES_DTCO[0]).Take(lengthErrorCodes16bit).ToArray();
+                    List<int> pCodeLocation = SearchBytePattern(pCodeArray, DFES_DTCOCuttedEightBit);
+                    foreach (var item in pCodeLocation)
+                        //Make sure only the even and not the odd start addresses are used, since it's 16-bit.
+                        if (item % 2 == 0)
+                        {
+                            {
+                                //Create string of item
+                                string itemString = item.ToString();
+                                //Create datatable
+                                DataTable dtMain = new DataTable();
+                                dtMain.Clear();
+                                dtMain.Columns.Add("P-Code");
+                                dtMain.Columns.Add("Address");
+                                DataRow _itemString = dtMain.NewRow();
+
+                                int addressDFES_DTCO = item + potentialDFES_DTCO[0];
+
+                                //Add row to column
+                                _itemString["P-Code"] = "Test";
+                                _itemString["Address"] = addressDFES_DTCO.ToString();
+                                dtMain.Rows.Add(itemString);
+
+                                dgvMain.DataSource = dtMain;
+
+                                //txtBoxMain.Text = addressDFES_DTCO.ToString();
+                                //16 bit
+                                if (potentialDFC_DisblMsk2.Count != 0)
+                                {
+                                    //Calculate the address of the DisableMask
+                                    var DFC_DisblMsk2Cutted = bytes.Skip(potentialDFC_DisblMsk2[0]).Take(lengthErrorCodes16bit).ToArray();
+                                    int addressDFC_DisblMsk2 = item + potentialDFC_DisblMsk2[0];
+
+                                    //txtBoxMain.Text = addressDFC_DisblMsk2.ToString();
+
+                                    //Set bytes to 0
+                                    bytes[addressDFC_DisblMsk2] = 255;
+                                    bytes[addressDFC_DisblMsk2 + 1] = 255;
+                                }
+                                //8bit, item count divided by 2 to get the right address
+                                if (potentialDFES_Cls.Count != 0)
+                                {
+                                    int EightBitItem = item / 2;
+                                    //Calculate the address of the Fehlerklass
+                                    var DFES_ClsCutted = bytes.Skip(potentialDFES_Cls[0]).Take(lengthErrorCodes8bit).ToArray();
+                                    int addressDFES_Cls = EightBitItem + potentialDFES_Cls[0];
+                                    //Set byte to 0
+                                    bytes[addressDFES_Cls] = 0;
+
+                                    //txtBoxMain.Text = bytes.ToString();
+                                }
+                            }
+                        }
+                    //Write bytes to file.
+                    var path = @"file.bin";
+                    File.WriteAllBytes(path, bytes);
+                }
+                else
+                {
+                    MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
+                    return;
+                }
+            }
+        }
+
+        //SearchFunction for pattern search in byte array
+        static public List<int> SearchBytePattern(byte[] pattern, byte[] bytes)
+        {
+            List<int> positions = new List<int>();
+            int patternLength = pattern.Length;
+            int totalLength = bytes.Length;
+            byte firstMatchByte = pattern[0];
+            for (int i = 0; i < totalLength; i++)
+            {
+                if (firstMatchByte == bytes[i] && totalLength - i >= patternLength)
+                {
+                    byte[] match = new byte[patternLength];
+                    Array.Copy(bytes, i, match, 0, patternLength);
+                    if (match.SequenceEqual<byte>(pattern))
+                    {
+                        positions.Add(i);
+                        i += patternLength - 1;
+                    }
+                }
+            }
+            return positions;
+        }
+    }
+}
