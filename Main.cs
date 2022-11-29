@@ -151,6 +151,11 @@ namespace DtcRemover
                 //dtAvailableCodes.Columns.Add("P-Code");
                 dgvAvailableCodes.DataSource = dtAvailableCodes;
             }
+            else
+            {
+                MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
+                return;
+            }
         }
         //ByteArray to String
         public static string ByteArrayToString(byte[] ba)
@@ -266,7 +271,6 @@ namespace DtcRemover
                 return;
             }
         }
-
         private void btnSaveFile_Click(object sender, EventArgs e)
         {
             //Write bytes to file.
