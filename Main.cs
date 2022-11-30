@@ -92,7 +92,7 @@ namespace DtcRemover
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
-                        MessageBox.Show("EDCP17CP44 Algorithm Detected", "EDCP17CP44");
+                        MessageBox.Show("(EDCP17CP44 Based on 4G0907589F_0004 Algorithm Detected", "EDCP17CP44");
                     }
                 }
 
@@ -118,7 +118,7 @@ namespace DtcRemover
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
-                        MessageBox.Show("MED17.5.25 Algorithm Detected", "MED17.5.25");
+                        MessageBox.Show("MED17.5.25 Based on 04E906027JT_4145 Algorithm Detected", "MED17.5.25");
                     }
                 }
 
@@ -148,7 +148,7 @@ namespace DtcRemover
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
-                        MessageBox.Show("EDC17CP54 Algorithm Detected", "EDC17CP54");
+                        MessageBox.Show("EDC17CP54 Based on 4G2907311C_0007 Algorithm Detected", "EDC17CP54");
                     }                       
                 }
                 //Add 4K0907401K_0003
@@ -173,7 +173,7 @@ namespace DtcRemover
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
-                        MessageBox.Show("MD1_CP004 Algorithm Detected", "MD1_CP004");
+                        MessageBox.Show("MD1_CP004 Based on 4K0907401K_0003 Algorithm Detected", "MD1_CP004");
                     }
                     else
                     {
