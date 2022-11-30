@@ -89,11 +89,11 @@ namespace DtcRemover
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
                         MessageBox.Show("EDCP17CP44 Algorithm Detected", "EDCP17CP44");
-                    }  
+                    }
                 }
 
                 //Add 04E906027JT_4145
-                if (potentialDFES_DTCO.Count == 0 && potentialDFES_DTCO.Count == 0 && potentialDFC_DisblMsk2.Count == 0)
+                if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
                 {
                     //block length is 992 8 bit, 1984 16 bit error codes.
                     lengthErrorCodes8bit = 992;
@@ -119,14 +119,14 @@ namespace DtcRemover
                 }
 
                 //Add 4G2907311C_0007
-                if (potentialDFES_DTCO.Count == 0 && potentialDFES_DTCO.Count == 0 && potentialDFC_DisblMsk2.Count == 0)
+                if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
                 {
                     //block length
                     lengthErrorCodes8bit = 1560;
                     lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
                     //Pcode Block
                     //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
-                    DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00 };
+                    DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00, 00, 00, 00, 08, 208, 23 };
                     //Start of Fehlerklasse 8 bit
                     DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 01, 02 };
                     //Start of DisableMask 16 bit
@@ -142,6 +142,10 @@ namespace DtcRemover
                     {
                         MessageBox.Show("EDC17CP54 Algorithm Detected", "EDC17CP54");
                     }
+                    else
+                    {
+                        MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
+                    }                        
                 }
 
                 //Create DTC P-code table to show which DTC are available in the ECU
