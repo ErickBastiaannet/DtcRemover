@@ -467,7 +467,7 @@ namespace DtcRemover
         //Accept only numbers in textbox.
         private void tbRemoveDtc_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+            e.KeyChar = Char.ToUpper(e.KeyChar);
         }
     }
 }
