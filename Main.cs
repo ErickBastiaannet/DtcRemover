@@ -52,6 +52,10 @@ namespace DtcRemover
             //Disable Open File button
             btnOpenFile.Enabled = false;
 
+            //Reset datatable Main
+            dtMain.Reset();
+            dtAvailableCodes.Reset();
+
             //Add columns to datatable Main
             dtMain.Columns.Add("P-Code");
             dtMain.Columns.Add("Removed");
@@ -124,8 +128,12 @@ namespace DtcRemover
                     //block length
                     lengthErrorCodes8bit = 1560;
                     lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
-                    //Pcode Block
+                    //Pcode Block                   
+
                     //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    //Block based on A2L
+                    //DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00 };
+                    //Block Based on Swiftec
                     DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00, 00, 00, 00, 08, 208, 23 };
                     //Start of Fehlerklasse 8 bit
                     DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 01, 02 };
@@ -141,11 +149,45 @@ namespace DtcRemover
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
                         MessageBox.Show("EDC17CP54 Algorithm Detected", "EDC17CP54");
+                    }                       
+                }
+                //Add 4K0907401K_0003
+                if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
+                {
+                    //block length
+                    lengthErrorCodes8bit = 1864;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 01, 02 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 224 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                    {
+                        MessageBox.Show("MD1_CP004 Algorithm Detected", "MD1_CP004");
                     }
                     else
                     {
-                        MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");
-                    }                        
+                        MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");  
+                        dtMain.Reset();
+                        dtAvailableCodes.Reset();
+                        dgvAvailableCodes.Refresh();
+                        dgvAvailableCodes.Refresh();
+                        tbRemoveDtc.Text = "";
+                        btnSaveFile.Enabled = false;
+                        btnRemoveDtc.Enabled = false;
+                        btnOpenFile.Enabled = true;
+                        return;
+                    }
                 }
 
                 //Create DTC P-code table to show which DTC are available in the ECU
@@ -305,9 +347,9 @@ namespace DtcRemover
             //Write bytes to file.
             var path = @"file.bin";
             File.WriteAllBytes(path, bytes);
-            dtMain.Clear();
-            dtAvailableCodes.Clear();
-            dgvAvailableCodes.Refresh();
+            dtMain.Reset();
+            dtAvailableCodes.Reset();
+            dgvMain.Refresh();
             dgvAvailableCodes.Refresh();
             tbRemoveDtc.Text = "";
             btnSaveFile.Enabled = false;
