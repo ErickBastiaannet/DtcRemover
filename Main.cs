@@ -152,7 +152,7 @@ namespace DtcRemover
                     //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
                     DFES_DTCO = new byte[] { 00, 00, 07, 06, 54 };
                     //Start of Fehlerklasse 8 bit
-                    DFES_Cls = new byte[] { 11, 03, 04 };
+                    DFES_Cls = new byte[] { 11, 03, 04, 11, 11 };
                     //Start of DisableMask 16 bit
                     DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 05, 08 };
 
