@@ -39,6 +39,10 @@ namespace DtcRemover
 
         int lengthErrorCodes8bit;
         int lengthErrorCodes16bit;
+        
+        bool hiLoSwitch = false;
+
+        string substringBytesSwapped;
 
         //Create datatables 
         //Removed P-Code table
@@ -86,12 +90,17 @@ namespace DtcRemover
 
                     //Find locations of DTC tables
                     potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
-                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
-                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
 
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
+                        hiLoSwitch = false;
                         MessageBox.Show("(EDCP17CP44 Based on 4G0907589F_0004 Algorithm Detected", "EDCP17CP44");
                     }
                 }
@@ -112,12 +121,17 @@ namespace DtcRemover
 
                     //Find locations of DTC tables
                     potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
-                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
-                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
-                    
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
+                        hiLoSwitch = false;
                         MessageBox.Show("MED17.5.25 Based on 04E906027JT_4145 Algorithm Detected", "MED17.5.25");
                     }
                 }
@@ -142,14 +156,49 @@ namespace DtcRemover
 
                     //Find locations of DTC tables
                     potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
-                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
-                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
 
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
+                        hiLoSwitch = false;
                         MessageBox.Show("EDC17CP54 Based on 4G2907311C_0007 Algorithm Detected", "EDC17CP54");
                     }                       
+                }
+                //8W0907311B_0003
+                if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
+                {
+                    //block length is 1552 8 bit, 3104 16 bit error codes.
+                    lengthErrorCodes8bit = 1552;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 04, 11 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 02 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 03, 252 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count !=0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                    {
+                        hiLoSwitch = true;
+                        MessageBox.Show("(MD1_CP004 Based on 8W0907311B_0003 Algorithm Detected", "MD1_CP004");
+                    }
                 }
                 //Add 4K0907401K_0003
                 if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
@@ -167,12 +216,17 @@ namespace DtcRemover
 
                     //Find locations of DTC tables
                     potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
-                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
-                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
 
                     //Show Messagebox with detected ECU Type
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
+                        hiLoSwitch = false;
                         MessageBox.Show("MD1_CP004 Based on 4K0907401K_0003 Algorithm Detected", "MD1_CP004");
                     }
                     else
@@ -202,7 +256,15 @@ namespace DtcRemover
                 {
                     string substring = hexStringAvailableErrorCodes.Substring(i, 4);
                     //swap the first 2 characters with the last 2 (HiLo Change)
-                    string substringBytesSwapped = substring.Remove(0, 2) + substring.Substring(0, 2);
+                    if (hiLoSwitch == false)
+                    {
+                        substringBytesSwapped = substring.Remove(0, 2) + substring.Substring(0, 2);
+                    }
+                    if (hiLoSwitch == true)
+                    {
+                        substringBytesSwapped = substring;
+                    }
+                    
                     //UpperCase for P-codes
                     string substringBytesSwappedUpper = substringBytesSwapped.ToUpper();
 
@@ -259,18 +321,30 @@ namespace DtcRemover
             }
             return positions;
         }
-
-        private void btnRemoveDtc_Click(object sender, EventArgs e)
+        string pCodeBinary;
+        string pCodeBinary1;
+        string pCodeBinary2;
+        public void btnRemoveDtc_Click(object sender, EventArgs e)
         {
             //Search for P-Code
             //Test P0087 Hex to Dec
             string pCodeHex = tbRemoveDtc.Text;
+
             var pcode1 = pCodeHex.Substring(0, 2);
             var pcode2 = pCodeHex.Substring(2, 2);
 
-            string pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
-            string pCodeBinary1 = Convert.ToInt32(pcode2, 16).ToString();
-            string pCodeBinary2 = Convert.ToInt32(pcode1, 16).ToString();
+            if (hiLoSwitch == false)
+            {
+                pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
+                pCodeBinary1 = Convert.ToInt32(pcode2, 16).ToString();
+                pCodeBinary2 = Convert.ToInt32(pcode1, 16).ToString();
+            }
+            if (hiLoSwitch == true)
+            {
+                pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
+                pCodeBinary2 = Convert.ToInt32(pcode2, 16).ToString();
+                pCodeBinary1 = Convert.ToInt32(pcode1, 16).ToString();
+            }
 
             string decimal_numbers = pCodeBinary1 + "," + pCodeBinary2;
 
