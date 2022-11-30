@@ -95,7 +95,7 @@ namespace DtcRemover
                 //Add 04E906027JT_4145
                 if (potentialDFES_DTCO.Count == 0 && potentialDFES_DTCO.Count == 0 && potentialDFC_DisblMsk2.Count == 0)
                 {
-                    //block length is 1552 8 bit, 3104 16 bit error codes.
+                    //block length is 992 8 bit, 1984 16 bit error codes.
                     lengthErrorCodes8bit = 992;
                     lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
                     //Pcode Block
@@ -115,6 +115,32 @@ namespace DtcRemover
                     if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
                     {
                         MessageBox.Show("MED17.5.25 Algorithm Detected", "MED17.5.25");
+                    }
+                }
+
+                //Add 4G2907311C_0007
+                if (potentialDFES_DTCO.Count == 0 && potentialDFES_DTCO.Count == 0 && potentialDFC_DisblMsk2.Count == 0)
+                {
+                    //block length
+                    lengthErrorCodes8bit = 1560;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 01, 02 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 253, 03, 252 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                    potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                    {
+                        MessageBox.Show("EDC17CP54 Algorithm Detected", "EDC17CP54");
                     }
                 }
 
@@ -144,8 +170,7 @@ namespace DtcRemover
                         //Add row to column
                         _pCodeString["P-Code"] = substringBytesSwappedUpper;
                         dtAvailableCodes.Rows.Add(_pCodeString);
-                    }
-                    
+                    }                    
                 }
                 //Show list with available errorcodes in datagridview
                 //dtAvailableCodes.Columns.Add("P-Code");
