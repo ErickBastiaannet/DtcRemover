@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using System.Data.SqlTypes;
 using System.Collections;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Globalization;
 
 namespace DtcRemover
 {
@@ -35,7 +36,8 @@ namespace DtcRemover
 
         List<int> potentialDFES_DTCO;
         List<int> potentialDFES_Cls;
-        List<int> potentialDFC_DisblMsk2;    
+        List<int> potentialDFC_DisblMsk2;
+        List<string> dtcFromList;
 
         int lengthErrorCodes8bit;
         int lengthErrorCodes16bit;
@@ -56,6 +58,8 @@ namespace DtcRemover
         {
             //Enable DTC Remove button
             btnRemoveDtc.Enabled = true;
+            //Enable Open File button
+            btnOpenDtc.Enabled = true;
             //Disable Open File button
             btnOpenFile.Enabled = false;
 
@@ -271,6 +275,7 @@ namespace DtcRemover
                         btnSaveFile.Enabled = false;
                         btnRemoveDtc.Enabled = false;
                         btnOpenFile.Enabled = true;
+                        btnOpenDtc.Enabled = false;
                         System.Windows.Forms.Application.Restart();
                         return;
                     }
@@ -461,6 +466,7 @@ namespace DtcRemover
             btnSaveFile.Enabled = false;
             btnRemoveDtc.Enabled = false;
             btnOpenFile.Enabled = true;
+            btnOpenDtc.Enabled = false;
             MessageBox.Show("Modified file succesfully saved.", "File saved");
             System.Windows.Forms.Application.Restart();
         }
@@ -469,5 +475,18 @@ namespace DtcRemover
         {
             e.KeyChar = Char.ToUpper(e.KeyChar);
         }
+
+        private void btnOpenDtc_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog to select file with dtc list
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string path = openFileDialog.FileName;
+                //Convert P-Codes to list
+                dtcFromList = System.IO.File.ReadLines(path).ToList();
+            }
+        }        
     }
 }

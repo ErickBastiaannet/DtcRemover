@@ -39,6 +39,7 @@
             this.dgvMain = new System.Windows.Forms.DataGridView();
             this.gpbAvailableCodes = new System.Windows.Forms.GroupBox();
             this.dgvAvailableCodes = new System.Windows.Forms.DataGridView();
+            this.btnOpenDtc = new System.Windows.Forms.Button();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -99,6 +100,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnOpenDtc);
             this.groupBox1.Controls.Add(this.tbRemoveDtc);
             this.groupBox1.Controls.Add(this.btnRemoveDtc);
             this.groupBox1.Location = new System.Drawing.Point(391, 3);
@@ -163,6 +165,17 @@
             this.dgvAvailableCodes.Size = new System.Drawing.Size(370, 339);
             this.dgvAvailableCodes.TabIndex = 4;
             // 
+            // btnOpenDtc
+            // 
+            this.btnOpenDtc.Enabled = false;
+            this.btnOpenDtc.Location = new System.Drawing.Point(199, 21);
+            this.btnOpenDtc.Name = "btnOpenDtc";
+            this.btnOpenDtc.Size = new System.Drawing.Size(86, 23);
+            this.btnOpenDtc.TabIndex = 4;
+            this.btnOpenDtc.Text = "Open DTC List";
+            this.btnOpenDtc.UseVisualStyleBackColor = true;
+            this.btnOpenDtc.Click += new System.EventHandler(this.btnOpenDtc_Click);
+            // 
             // DtcRemover
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,6 +209,7 @@
         private System.Windows.Forms.DataGridView dgvMain;
         private System.Windows.Forms.GroupBox gpbAvailableCodes;
         private System.Windows.Forms.DataGridView dgvAvailableCodes;
+        private System.Windows.Forms.Button btnOpenDtc;
     }
 }
 
