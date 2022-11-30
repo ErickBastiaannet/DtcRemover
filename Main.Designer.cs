@@ -114,6 +114,7 @@
             this.tbRemoveDtc.Name = "tbRemoveDtc";
             this.tbRemoveDtc.Size = new System.Drawing.Size(100, 20);
             this.tbRemoveDtc.TabIndex = 3;
+            this.tbRemoveDtc.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbRemoveDtc_KeyPress);
             // 
             // btnRemoveDtc
             // 

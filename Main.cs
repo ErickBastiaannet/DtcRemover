@@ -43,6 +43,9 @@ namespace DtcRemover
         bool hiLoSwitch = false;
 
         string substringBytesSwapped;
+        string pCodeBinary;
+        string pCodeBinary1;
+        string pCodeBinary2;
 
         //Create datatables 
         //Removed P-Code table
@@ -262,14 +265,13 @@ namespace DtcRemover
                     else
                     {
                         MessageBox.Show("Firmware not supported, please contact support.", "Firmware not supported");  
-                        dtMain.Reset();
-                        dtAvailableCodes.Reset();
                         dgvAvailableCodes.Refresh();
-                        dgvAvailableCodes.Refresh();
+                        dgvMain.Refresh();
                         tbRemoveDtc.Text = "";
                         btnSaveFile.Enabled = false;
                         btnRemoveDtc.Enabled = false;
                         btnOpenFile.Enabled = true;
+                        System.Windows.Forms.Application.Restart();
                         return;
                     }
                 }
@@ -311,7 +313,6 @@ namespace DtcRemover
                     }                    
                 }
                 //Show list with available errorcodes in datagridview
-                //dtAvailableCodes.Columns.Add("P-Code");
                 dgvAvailableCodes.DataSource = dtAvailableCodes;
             }
             else
@@ -351,15 +352,17 @@ namespace DtcRemover
             }
             return positions;
         }
-        string pCodeBinary;
-        string pCodeBinary1;
-        string pCodeBinary2;
         public void btnRemoveDtc_Click(object sender, EventArgs e)
         {
             //Search for P-Code
             //Test P0087 Hex to Dec
             string pCodeHex = tbRemoveDtc.Text;
 
+            if (tbRemoveDtc.Text.Length  < 4)
+            {
+                MessageBox.Show("Please enter the full P-Code including zero's. E.g. for P0401, enter 0401", "Error");
+                return;
+            }
             var pcode1 = pCodeHex.Substring(0, 2);
             var pcode2 = pCodeHex.Substring(2, 2);
 
@@ -449,10 +452,9 @@ namespace DtcRemover
         private void btnSaveFile_Click(object sender, EventArgs e)
         {
             //Write bytes to file.
-            var path = @"file.bin";
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var path = desktop + "\\OutputFileDtcRemover.bin";
             File.WriteAllBytes(path, bytes);
-            dtMain.Reset();
-            dtAvailableCodes.Reset();
             dgvMain.Refresh();
             dgvAvailableCodes.Refresh();
             tbRemoveDtc.Text = "";
@@ -460,6 +462,12 @@ namespace DtcRemover
             btnRemoveDtc.Enabled = false;
             btnOpenFile.Enabled = true;
             MessageBox.Show("Modified file succesfully saved.", "File saved");
+            System.Windows.Forms.Application.Restart();
+        }
+        //Accept only numbers in textbox.
+        private void tbRemoveDtc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
     }
 }
