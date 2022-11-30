@@ -142,6 +142,36 @@ namespace DtcRemover
                         MessageBox.Show("MED17.5.25 Based on 04E906027JT_4145 Algorithm Detected", "MED17.5.25");
                     }
                 }
+                //Add 04L906026AD_1970
+                if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
+                {
+                    //block length is 1396 8 bit, 2792 16 bit error codes.
+                    lengthErrorCodes8bit = 1396;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 07, 06, 54 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 03, 04 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 05, 08 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count != 0 && potentialDFES_DTCO.Count != 0 && potentialDFC_DisblMsk2.Count != 0)
+                    {
+                        hiLoSwitch = false;
+                        MessageBox.Show("EDC17C74 Based on 04L906026AD_1970 Algorithm Detected", "EDC17C74");
+                    }
+                }
                 //Add 8K5907401T_0001
                 if (potentialDFES_DTCO.Count == 0 || potentialDFES_DTCO.Count == 0 || potentialDFC_DisblMsk2.Count == 0)
                 {
