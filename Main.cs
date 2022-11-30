@@ -486,6 +486,97 @@ namespace DtcRemover
                 string path = openFileDialog.FileName;
                 //Convert P-Codes to list
                 dtcFromList = System.IO.File.ReadLines(path).ToList();
+                   
+                for (int j = 0; j < dtcFromList.Count; j++)
+                    {
+                    string pCodeHex = dtcFromList[j].ToString();
+
+                    if (pCodeHex.Length < 4)
+                    {
+                        MessageBox.Show("Please Check the list.", "Error");
+                        return;
+                    }
+                    var pcode1 = pCodeHex.Substring(0, 2);
+                    var pcode2 = pCodeHex.Substring(2, 2);
+
+                    if (hiLoSwitch == false)
+                    {
+                        pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
+                        pCodeBinary1 = Convert.ToInt32(pcode2, 16).ToString();
+                        pCodeBinary2 = Convert.ToInt32(pcode1, 16).ToString();
+                    }
+                    if (hiLoSwitch == true)
+                    {
+                        pCodeBinary = Convert.ToInt32(pCodeHex, 16).ToString();
+                        pCodeBinary2 = Convert.ToInt32(pcode2, 16).ToString();
+                        pCodeBinary1 = Convert.ToInt32(pcode1, 16).ToString();
+                    }
+
+                    string decimal_numbers = pCodeBinary1 + "," + pCodeBinary2;
+
+                    string[] decimal_values = decimal_numbers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    byte[] pCodeArray = new byte[decimal_values.Length];
+                    for (int i = 0; i < decimal_values.Length; i++)
+                    {
+                        pCodeArray[i] = byte.Parse(decimal_values[i]);
+                    }
+
+                    //Extract the DTC Array's from the file to start counting the DTC position
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        //Search for all DTC's
+                        var DFES_DTCOCuttedEightBit = bytes.Skip(potentialDFES_DTCO[0]).Take(lengthErrorCodes16bit).ToArray();
+                        List<int> pCodeLocation = SearchBytePattern(pCodeArray, DFES_DTCOCuttedEightBit);
+                        foreach (var item in pCodeLocation)
+                            //Make sure only the even and not the odd start addresses are used, since it's 16-bit.
+                            if (item % 2 == 0)
+                            {
+                                {
+                                    int addressDFES_DTCO = item + potentialDFES_DTCO[0];
+
+                                    //txtBoxMain.Text = addressDFES_DTCO.ToString();
+                                    //16 bit
+                                    if (potentialDFC_DisblMsk2.Count != 0)
+                                    {
+                                        //Calculate the address of the DisableMask
+                                        var DFC_DisblMsk2Cutted = bytes.Skip(potentialDFC_DisblMsk2[0]).Take(lengthErrorCodes16bit).ToArray();
+                                        int addressDFC_DisblMsk2 = item + potentialDFC_DisblMsk2[0];
+
+                                        //txtBoxMain.Text = addressDFC_DisblMsk2.ToString();
+
+                                        //Set bytes to 0
+                                        bytes[addressDFC_DisblMsk2] = 255;
+                                        bytes[addressDFC_DisblMsk2 + 1] = 255;
+                                    }
+                                    //8bit, item count divided by 2 to get the right address
+                                    if (potentialDFES_Cls.Count != 0)
+                                    {
+                                        int EightBitItem = item / 2;
+                                        //Calculate the address of the Fehlerklass
+                                        var DFES_ClsCutted = bytes.Skip(potentialDFES_Cls[0]).Take(lengthErrorCodes8bit).ToArray();
+                                        int addressDFES_Cls = EightBitItem + potentialDFES_Cls[0];
+                                        //Set byte to 0
+                                        bytes[addressDFES_Cls] = 0;
+
+                                        //txtBoxMain.Text = bytes.ToString();
+                                    }
+                                }
+                            }
+                        
+                        //Enable Save File button
+                        btnSaveFile.Enabled = true;
+
+                        DataRow _itemString = dtMain.NewRow();
+                        //Add row to column
+                        _itemString["P-Code"] = pCodeHex;
+                        _itemString["Removed"] = "Yes";
+                        dtMain.Rows.Add(_itemString);
+
+                        dgvMain.DataSource = dtMain;
+                    }                    
+                }
+                MessageBox.Show("DTC's from list removed succesfully.", "DTC Removed");
             }
         }        
     }
