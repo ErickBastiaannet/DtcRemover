@@ -145,8 +145,39 @@ namespace DtcRemover
                     }
                 }
 
-                    //Add 04C906025F_6355
-                    if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                //Add 04C906026_3537
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                {
+                    //block length is 900 8 bit, 1800 16 bit error codes.
+                    lengthErrorCodes8bit = 900;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 50, 05 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 11, 1, 1, 11, 2, 0 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 253, 03, 255, 255, 00, 00, 255 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    {
+                        hiLoSwitch = false;
+                        MessageBox.Show("MED17.5.21 Based on 04C906026_3537 Algorithm Detected", "MED17.5.21");
+                    }
+                }
+
+                //Add 04C906025F_6355
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 960 8 bit, 1920 16 bit error codes.
                     lengthErrorCodes8bit = 960;
