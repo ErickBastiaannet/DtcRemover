@@ -202,6 +202,36 @@ namespace DtcRemover
                         MessageBox.Show("EDC17CP44 Based on 8K5907401T_0001 Algorithm Detected", "EDC17CP44");
                     }
                 }
+                //Add 992906020AS_0002
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                {
+                    //block length is 1635 8 bit, 3270 16 bit error codes.
+                    lengthErrorCodes8bit = 1635;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 08, 208 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 00, 11, 01, 11, 02 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 255, 255, 255, 255, 252, 03, 252, 03, 255, 255, 233 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    {
+                        hiLoSwitch = false;
+                        MessageBox.Show("MG1CP007 Based on 992906020AS_0002 Algorithm Detected", "MG1CP007");
+                    }
+                }
 
                 //Add 4G2907311C_0007
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
