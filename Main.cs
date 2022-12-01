@@ -113,7 +113,7 @@ namespace DtcRemover
                         MessageBox.Show("(EDCP17CP44 Based on 4G0907589F_0004 Algorithm Detected", "EDCP17CP44");
                     }
                 }
-                   
+
                 //Add 04E906016DE_9022
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
@@ -143,6 +143,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.21 Based on 04E906016DE_9022 Algorithm Detected", "MED17.5.21");
                     }
+                }
 
                     //Add 04C906025F_6355
                     if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
