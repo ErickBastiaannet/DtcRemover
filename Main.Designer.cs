@@ -40,6 +40,7 @@
             this.gpbAvailableCodes = new System.Windows.Forms.GroupBox();
             this.dgvAvailableCodes = new System.Windows.Forms.DataGridView();
             this.btnOpenDtc = new System.Windows.Forms.Button();
+            this.btnCloseFile = new System.Windows.Forms.Button();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -68,6 +69,7 @@
             // 
             // gbControl
             // 
+            this.gbControl.Controls.Add(this.btnCloseFile);
             this.gbControl.Controls.Add(this.btnSaveFile);
             this.gbControl.Controls.Add(this.btnOpenFile);
             this.gbControl.Location = new System.Drawing.Point(3, 3);
@@ -176,6 +178,17 @@
             this.btnOpenDtc.UseVisualStyleBackColor = true;
             this.btnOpenDtc.Click += new System.EventHandler(this.btnOpenDtc_Click);
             // 
+            // btnCloseFile
+            // 
+            this.btnCloseFile.Enabled = false;
+            this.btnCloseFile.Location = new System.Drawing.Point(168, 19);
+            this.btnCloseFile.Name = "btnCloseFile";
+            this.btnCloseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnCloseFile.TabIndex = 2;
+            this.btnCloseFile.Text = "Close File";
+            this.btnCloseFile.UseVisualStyleBackColor = true;
+            this.btnCloseFile.Click += new System.EventHandler(this.btnCloseFile_Click);
+            // 
             // DtcRemover
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,6 +223,7 @@
         private System.Windows.Forms.GroupBox gpbAvailableCodes;
         private System.Windows.Forms.DataGridView dgvAvailableCodes;
         private System.Windows.Forms.Button btnOpenDtc;
+        private System.Windows.Forms.Button btnCloseFile;
     }
 }
 

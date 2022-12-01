@@ -62,6 +62,8 @@ namespace DtcRemover
             btnOpenDtc.Enabled = true;
             //Disable Open File button
             btnOpenFile.Enabled = false;
+            //Enable Close File button
+            btnCloseFile.Enabled = true;
 
             //Reset datatable Main
             dtMain.Reset();
@@ -399,6 +401,7 @@ namespace DtcRemover
                         btnRemoveDtc.Enabled = false;
                         btnOpenFile.Enabled = true;
                         btnOpenDtc.Enabled = false;
+                        btnCloseFile.Enabled = false;
                         System.Windows.Forms.Application.Restart();
                         return;
                     }
@@ -590,6 +593,7 @@ namespace DtcRemover
             btnRemoveDtc.Enabled = false;
             btnOpenFile.Enabled = true;
             btnOpenDtc.Enabled = false;
+            btnCloseFile.Enabled = false;
             MessageBox.Show("Modified file succesfully saved.", "File saved");
             System.Windows.Forms.Application.Restart();
         }
@@ -701,6 +705,11 @@ namespace DtcRemover
                 }
                 MessageBox.Show("DTC's from list removed succesfully.", "DTC Removed");
             }
-        }        
+        }
+
+        private void btnCloseFile_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Restart();
+        }
     }
 }
