@@ -105,7 +105,7 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("(EDCP17CP44 Based on 4G0907589F_0004 Algorithm Detected", "EDCP17CP44");
@@ -113,7 +113,7 @@ namespace DtcRemover
                 }
 
                 //Add 04E906027JT_4145
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 992 8 bit, 1984 16 bit error codes.
                     lengthErrorCodes8bit = 992;
@@ -136,14 +136,14 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.25 Based on 04E906027JT_4145 Algorithm Detected", "MED17.5.25");
                     }
                 }
                 //Add 04L906026AD_1970
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1396 8 bit, 2792 16 bit error codes.
                     lengthErrorCodes8bit = 1396;
@@ -166,14 +166,14 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17C74 Based on 04L906026AD_1970 Algorithm Detected", "EDC17C74");
                     }
                 }
                 //Add 8K5907401T_0001
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1440 8 bit, 2880 16 bit error codes.
                     lengthErrorCodes8bit = 1440;
@@ -196,7 +196,7 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17CP44 Based on 8K5907401T_0001 Algorithm Detected", "EDC17CP44");
@@ -204,7 +204,7 @@ namespace DtcRemover
                 }
 
                 //Add 4G2907311C_0007
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length
                     lengthErrorCodes8bit = 1560;
@@ -231,14 +231,14 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17CP54 Based on 4G2907311C_0007 Algorithm Detected", "EDC17CP54");
                     }                       
                 }
                 //8W0907311B_0003
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1552 8 bit, 3104 16 bit error codes.
                     lengthErrorCodes8bit = 1552;
@@ -261,14 +261,14 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = true;
                         MessageBox.Show("(MD1_CP004 Based on 8W0907311B_0003 Algorithm Detected", "MD1_CP004");
                     }
                 }
                 //4G0906560_0013
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1392 8 bit, 2784 16 bit error codes.
                     lengthErrorCodes8bit = 1392;
@@ -291,14 +291,14 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_DTCO.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
-                        hiLoSwitch = true;
+                        hiLoSwitch = false;
                         MessageBox.Show("(MED17.1.1 Based on 4G0906560_0013 Algorithm Detected", "MED17.1.1");
                     }
                 }
                 //Add 4K0907401K_0003
-                if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length
                     lengthErrorCodes8bit = 1864;
@@ -321,7 +321,7 @@ namespace DtcRemover
                     }
 
                     //Show Messagebox with detected ECU Type
-                    if (potentialDFES_DTCO.Count != 1 || potentialDFES_DTCO.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("MD1_CP004 Based on 4K0907401K_0003 Algorithm Detected", "MD1_CP004");
