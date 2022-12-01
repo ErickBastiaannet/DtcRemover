@@ -81,7 +81,7 @@ namespace DtcRemover
                 //Create byte array of the file in binary format
                 bytes = File.ReadAllBytes(openFileDialog.FileName);
 
-                //4G0907589F_0004
+                //Add 4G0907589F_0004
                 if (DFES_DTCO == null && DFES_Cls == null && DFC_DisblMsk2 == null)
                 {
                     //block length is 1552 8 bit, 3104 16 bit error codes.
@@ -237,7 +237,7 @@ namespace DtcRemover
                         MessageBox.Show("EDC17CP54 Based on 4G2907311C_0007 Algorithm Detected", "EDC17CP54");
                     }                       
                 }
-                //8W0907311B_0003
+                //Add 8W0907311B_0003
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1552 8 bit, 3104 16 bit error codes.
@@ -267,7 +267,7 @@ namespace DtcRemover
                         MessageBox.Show("(MD1_CP004 Based on 8W0907311B_0003 Algorithm Detected", "MD1_CP004");
                     }
                 }
-                //4G0906560_0013
+                //Add 4G0906560_0013
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
                 {
                     //block length is 1392 8 bit, 2784 16 bit error codes.
