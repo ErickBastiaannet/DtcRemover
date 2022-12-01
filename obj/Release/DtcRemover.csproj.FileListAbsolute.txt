@@ -1,0 +1,11 @@
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\bin\Release\DtcRemover.exe.config
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\bin\Release\DtcRemover.exe
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\bin\Release\DtcRemover.pdb
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.csproj.AssemblyReference.cache
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.csproj.SuggestedBindingRedirects.cache
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.DtcRemover.resources
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.Properties.Resources.resources
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.csproj.GenerateResource.cache
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.csproj.CoreCompileInputs.cache
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.exe
+C:\Users\TuningPC1\source\repos\DtcRemover\DtcRemover\obj\Release\DtcRemover.pdb
