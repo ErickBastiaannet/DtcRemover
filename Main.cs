@@ -599,6 +599,38 @@ namespace DtcRemover
                         MessageBox.Show("MG1CS008 Based on 4K0907557D_0002 Algorithm Detected", "MG1CS008");
                     }
                 }
+                //Add 05L906023AD_1067
+                if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
+                {
+                    //block length
+                    lengthErrorCodes8bit = 1697;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block                   
+
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    //Block based on A2L
+                    DFES_DTCO = new byte[] { 7, 6, 54, 2, 0, 0, 0 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 03, 04, 11, 11 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 253, 07, 253, 07, 253, 07, 253, 07, 253, 07 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    {
+                        hiLoSwitch = false;
+                        MessageBox.Show("MD1_CS004 Based on 05L906023AD_1067 Algorithm Detected", "MD1_CS004");
+                    }
+                }
 
                 //Add 4G2907311C_0007
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -1042,6 +1074,11 @@ namespace DtcRemover
         private void btnCloseFile_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Application.Restart();
+        }
+
+        private void DtcRemover_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -30,17 +30,17 @@
         {
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.gbControl = new System.Windows.Forms.GroupBox();
+            this.btnCloseFile = new System.Windows.Forms.Button();
             this.btnSaveFile = new System.Windows.Forms.Button();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnOpenDtc = new System.Windows.Forms.Button();
             this.tbRemoveDtc = new System.Windows.Forms.TextBox();
             this.btnRemoveDtc = new System.Windows.Forms.Button();
             this.gpbMain = new System.Windows.Forms.GroupBox();
             this.dgvMain = new System.Windows.Forms.DataGridView();
             this.gpbAvailableCodes = new System.Windows.Forms.GroupBox();
             this.dgvAvailableCodes = new System.Windows.Forms.DataGridView();
-            this.btnOpenDtc = new System.Windows.Forms.Button();
-            this.btnCloseFile = new System.Windows.Forms.Button();
             this.tlpMain.SuspendLayout();
             this.gbControl.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -79,6 +79,17 @@
             this.gbControl.TabStop = false;
             this.gbControl.Text = "Control";
             // 
+            // btnCloseFile
+            // 
+            this.btnCloseFile.Enabled = false;
+            this.btnCloseFile.Location = new System.Drawing.Point(168, 19);
+            this.btnCloseFile.Name = "btnCloseFile";
+            this.btnCloseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnCloseFile.TabIndex = 2;
+            this.btnCloseFile.Text = "Close File";
+            this.btnCloseFile.UseVisualStyleBackColor = true;
+            this.btnCloseFile.Click += new System.EventHandler(this.btnCloseFile_Click);
+            // 
             // btnSaveFile
             // 
             this.btnSaveFile.Enabled = false;
@@ -111,6 +122,17 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "P-Code";
+            // 
+            // btnOpenDtc
+            // 
+            this.btnOpenDtc.Enabled = false;
+            this.btnOpenDtc.Location = new System.Drawing.Point(199, 21);
+            this.btnOpenDtc.Name = "btnOpenDtc";
+            this.btnOpenDtc.Size = new System.Drawing.Size(86, 23);
+            this.btnOpenDtc.TabIndex = 4;
+            this.btnOpenDtc.Text = "Open DTC List";
+            this.btnOpenDtc.UseVisualStyleBackColor = true;
+            this.btnOpenDtc.Click += new System.EventHandler(this.btnOpenDtc_Click);
             // 
             // tbRemoveDtc
             // 
@@ -167,28 +189,6 @@
             this.dgvAvailableCodes.Size = new System.Drawing.Size(370, 339);
             this.dgvAvailableCodes.TabIndex = 4;
             // 
-            // btnOpenDtc
-            // 
-            this.btnOpenDtc.Enabled = false;
-            this.btnOpenDtc.Location = new System.Drawing.Point(199, 21);
-            this.btnOpenDtc.Name = "btnOpenDtc";
-            this.btnOpenDtc.Size = new System.Drawing.Size(86, 23);
-            this.btnOpenDtc.TabIndex = 4;
-            this.btnOpenDtc.Text = "Open DTC List";
-            this.btnOpenDtc.UseVisualStyleBackColor = true;
-            this.btnOpenDtc.Click += new System.EventHandler(this.btnOpenDtc_Click);
-            // 
-            // btnCloseFile
-            // 
-            this.btnCloseFile.Enabled = false;
-            this.btnCloseFile.Location = new System.Drawing.Point(168, 19);
-            this.btnCloseFile.Name = "btnCloseFile";
-            this.btnCloseFile.Size = new System.Drawing.Size(75, 23);
-            this.btnCloseFile.TabIndex = 2;
-            this.btnCloseFile.Text = "Close File";
-            this.btnCloseFile.UseVisualStyleBackColor = true;
-            this.btnCloseFile.Click += new System.EventHandler(this.btnCloseFile_Click);
-            // 
             // DtcRemover
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -199,6 +199,7 @@
             this.MinimumSize = new System.Drawing.Size(816, 489);
             this.Name = "DtcRemover";
             this.Text = "DTC Remover by Erick Bastiaannet";
+            this.Load += new System.EventHandler(this.DtcRemover_Load);
             this.tlpMain.ResumeLayout(false);
             this.gbControl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
