@@ -95,7 +95,7 @@ namespace DtcRemover
                     //Start of Fehlerklasse 8 bit
                     DFES_Cls = new byte[] { 11, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 00, 00, 00, 03, 11 };
                     //Start of DisableMask 16 bit
-                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253 };
+                    DFC_DisblMsk2 = new byte[] { 255, 255, 255, 255, 253, 03, 255, 255, 255, 255, 253, 03, 253, 03, 253 };
 
                     //Find locations of DTC tables
                     potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
