@@ -41,7 +41,7 @@ namespace DtcRemover
 
         int lengthErrorCodes8bit;
         int lengthErrorCodes16bit;
-        
+
         bool hiLoSwitch = false;
 
         string substringBytesSwapped;
@@ -53,7 +53,16 @@ namespace DtcRemover
         //Removed P-Code table
         DataTable dtMain = new DataTable();
         //List of available DTC's
-        DataTable dtAvailableCodes=new DataTable();
+        DataTable dtAvailableCodes = new DataTable();
+
+        private void ResetDtcBlocks()
+        {
+            DFES_DTCO = null;
+            DFES_Cls = null;
+            DFC_DisblMsk2 = null;
+        }
+
+
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             //Enable DTC Remove button
@@ -112,6 +121,39 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("(EDCP17CP44 Based on 4G0907589F_0004 Algorithm Detected", "EDCP17CP44");
                     }
+                    ResetDtcBlocks();
+                }
+
+                //Add 7P0907401_0006
+                if (DFES_DTCO == null && DFES_Cls == null && DFC_DisblMsk2 == null)
+                {
+                    //block length is 1036 8 bit, 2072 16 bit error codes.
+                    lengthErrorCodes8bit = 1036;
+                    lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
+                    //Pcode Block
+                    //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
+                    DFES_DTCO = new byte[] { 00, 00, 19, 209, 18, 209, 11, 21, 11, 21 };
+                    //Start of Fehlerklasse 8 bit
+                    DFES_Cls = new byte[] { 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 01, 01, 01 };
+                    //Start of DisableMask 16 bit
+                    DFC_DisblMsk2 = new byte[] { 00, 00, 255, 255, 253 };
+
+                    //Find locations of DTC tables
+                    potentialDFES_DTCO = SearchBytePattern(DFES_DTCO, bytes);
+                    //Speed up the search proces by skipping the next algorithms when potentialDFES_DTCO is empty
+                    if (potentialDFES_DTCO.Count != 0)
+                    {
+                        potentialDFES_Cls = SearchBytePattern(DFES_Cls, bytes);
+                        potentialDFC_DisblMsk2 = SearchBytePattern(DFC_DisblMsk2, bytes);
+                    }
+
+                    //Show Messagebox with detected ECU Type
+                    if (potentialDFES_DTCO.Count == 1 && potentialDFES_Cls.Count == 1 && potentialDFC_DisblMsk2.Count == 1)
+                    {
+                        hiLoSwitch = false;
+                        MessageBox.Show("EDCP17CP44 Based on 7P0907401_0006 Algorithm Detected", "EDCP17CP44");
+                    }
+                    ResetDtcBlocks();
                 }
 
                 //Add 04E906016DE_9022
@@ -143,6 +185,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.21 Based on 04E906016DE_9022 Algorithm Detected", "MED17.5.21");
                     }
+                    ResetDtcBlocks();
                 }
 
                 //Add 04C906026_3537
@@ -174,6 +217,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.21 Based on 04C906026_3537 Algorithm Detected", "MED17.5.21");
                     }
+                    ResetDtcBlocks();
                 }
 
                 //Add 04C906025F_6355
@@ -205,6 +249,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.1.27 Based on 04C906025F_6355 Algorithm Detected", "MED17.1.27");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 04E906027JT_4145
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -235,6 +280,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.25 Based on 04E906027JT_4145 Algorithm Detected", "MED17.5.25");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 04E906027HB_4418
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -265,6 +311,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5.21 Based on 04E906027HB_4418 Algorithm Detected", "MED17.5.21");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 05E906012Q_1319
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -295,6 +342,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MG1CS011 Based on 05E906012Q_1319 Algorithm Detected", "MG1CS011");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 2G0907115_0004
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -325,6 +373,7 @@ namespace DtcRemover
                         hiLoSwitch = true;
                         MessageBox.Show("MG1CS001 Based on 2G0907115_0004 Algorithm Detected", "MG1CS001");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 81A907115A_0001
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -355,6 +404,7 @@ namespace DtcRemover
                         hiLoSwitch = true;
                         MessageBox.Show("MG1CS111 Based on 81A907115A_0001 Algorithm Detected", "MG1CS111");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 8W0907115Q_0003
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -385,6 +435,7 @@ namespace DtcRemover
                         hiLoSwitch = true;
                         MessageBox.Show("MG1CS001 Based on 8W0907115Q_0003 Algorithm Detected", "MG1CS001");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 8P0907115BA_0020
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -415,6 +466,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MED17.5 Based on 8P0907115BA_0020 Algorithm Detected", "MED17.5");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 04L906026AD_1970
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -445,6 +497,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17C74 Based on 04L906026AD_1970 Algorithm Detected", "EDC17C74");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 8K5907401T_0001
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -475,6 +528,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17CP44 Based on 8K5907401T_0001 Algorithm Detected", "EDC17CP44");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 992906020AS_0002
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -505,6 +559,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MG1CP007 Based on 992906020AS_0002 Algorithm Detected", "MG1CP007");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 982906033T_0001
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -514,9 +569,6 @@ namespace DtcRemover
                     lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
                     //Pcode Block
                     //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
-                    //Based on damos
-                    //DFES_DTCO = new byte[] { 00, 00, 08, 208 };
-                    //Based on swiftec
                     DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 35, 21 };
                     //Start of Fehlerklasse 8 bit
                     DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 01, 11, 11, 01 };
@@ -538,6 +590,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MG1CP007 Based on 982906033T_0001 Algorithm Detected", "MG1CP007");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 4ML907589C_0001
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -568,6 +621,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MG1CS008 Based on 4ML907589C_0001 Algorithm Detected", "MG1CS008");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 4K0907557D_0002
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -598,6 +652,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MG1CS008 Based on 4K0907557D_0002 Algorithm Detected", "MG1CS008");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 05L906023AD_1067
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -630,6 +685,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("MD1_CS004 Based on 05L906023AD_1067 Algorithm Detected", "MD1_CS004");
                     }
+                    ResetDtcBlocks();
                 }
 
                 //Add 4G2907311C_0007
@@ -639,11 +695,7 @@ namespace DtcRemover
                     lengthErrorCodes8bit = 1560;
                     lengthErrorCodes16bit = lengthErrorCodes8bit * 2;
                     //Pcode Block                   
-
                     //Start of DFES_DTCO 16 bit (DFES_DTCO.DFC_Unused_C) 
-                    //Block based on A2L
-                    //DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00 };
-                    //Block Based on Swiftec
                     DFES_DTCO = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 11, 04, 00, 00, 00, 00, 08, 208, 23 };
                     //Start of Fehlerklasse 8 bit
                     DFES_Cls = new byte[] { 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 01, 02 };
@@ -664,7 +716,8 @@ namespace DtcRemover
                     {
                         hiLoSwitch = false;
                         MessageBox.Show("EDC17CP54 Based on 4G2907311C_0007 Algorithm Detected", "EDC17CP54");
-                    }                       
+                    }
+                    ResetDtcBlocks();
                 }
                 //Add 8W0907311B_0003
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -695,6 +748,7 @@ namespace DtcRemover
                         hiLoSwitch = true;
                         MessageBox.Show("(MD1_CP004 Based on 8W0907311B_0003 Algorithm Detected", "MD1_CP004");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 4G0906560_0013
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)
@@ -725,6 +779,7 @@ namespace DtcRemover
                         hiLoSwitch = false;
                         MessageBox.Show("(MED17.1.1 Based on 4G0906560_0013 Algorithm Detected", "MED17.1.1");
                     }
+                    ResetDtcBlocks();
                 }
                 //Add 4K0907401K_0003
                 if (potentialDFES_DTCO.Count != 1 || potentialDFES_Cls.Count != 1 || potentialDFC_DisblMsk2.Count != 1)

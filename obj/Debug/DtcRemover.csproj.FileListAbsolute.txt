@@ -20,3 +20,14 @@ D:\Documents\Software Development\GitHub\DtcRemover\obj\Debug\DtcRemover.pdb
 D:\Documents\Software Development\GitHub\DtcRemover\bin\Debug\DtcRemover.exe.config
 D:\Documents\Software Development\GitHub\DtcRemover\bin\Debug\DtcRemover.exe
 D:\Documents\Software Development\GitHub\DtcRemover\bin\Debug\DtcRemover.pdb
+D:\SoftwareProjects\Github\DtcRemover\bin\Debug\DtcRemover.exe.config
+D:\SoftwareProjects\Github\DtcRemover\bin\Debug\DtcRemover.exe
+D:\SoftwareProjects\Github\DtcRemover\bin\Debug\DtcRemover.pdb
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.csproj.AssemblyReference.cache
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.csproj.SuggestedBindingRedirects.cache
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.DtcRemover.resources
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.Properties.Resources.resources
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.csproj.GenerateResource.cache
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.csproj.CoreCompileInputs.cache
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.exe
+D:\SoftwareProjects\Github\DtcRemover\obj\Debug\DtcRemover.pdb
